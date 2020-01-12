@@ -12,22 +12,24 @@ AskQuestionsMultiserver(){
 	
 	# If no SQL client is installed, ask for it, otherwise remote DB check always fail.
 	if ! command -v mysql >/dev/null; then
-		while [[ ! "$_SQLClient" =~ $RE ]]
-		do
-			_SQLClient=$(whiptail --title "SQL Server" --backtitle "$WT_BACKTITLE" --nocancel --radiolist "Please select SQL Client type" 10 50 2 "MySQL" "(default)" ON "MariaDB" "" OFF 3>&1 1>&2 2>&3)
-		done
+		#while [[ ! "$_SQLClient" =~ $RE ]]
+		#do
+		#	_SQLClient=$(whiptail --title "SQL Server" --backtitle "$WT_BACKTITLE" --nocancel --radiolist "Please select SQL Client type" 10 50 2 "MySQL" "(default)" ON "MariaDB" "" OFF 3>&1 1>&2 2>&3)
+		#done
 		
-		if [ "$_SQLClient" == "MySQL" ]; then
-			apt_install mysql-client
-		elif [ "$_SQLClient" == "MariaDB" ]; then
-			apt_install mariadb-client
-		fi
+		#if [ "$_SQLClient" == "MySQL" ]; then
+		#	apt_install mysql-client
+		#elif [ "$_SQLClient" == "MariaDB" ]; then
+		#	apt_install mariadb-client
+		#fi
+		apt_install mariadb-client
 	fi
 
-	while [[ ! "$CFG_SQLSERVER" =~ $RE ]]
-	do
-		CFG_SQLSERVER=$(whiptail --title "SQL Server" --backtitle "$WT_BACKTITLE" --nocancel --radiolist "Please select SQL Server type" 10 50 2 "MySQL" "(default)" ON "MariaDB" "" OFF 3>&1 1>&2 2>&3)
-	done
+	#while [[ ! "$CFG_SQLSERVER" =~ $RE ]]
+	#do
+	#	CFG_SQLSERVER=$(whiptail --title "SQL Server" --backtitle "$WT_BACKTITLE" --nocancel --radiolist "Please select SQL Server type" 10 50 2 "MySQL" "(default)" ON "MariaDB" "" OFF 3>&1 1>&2 2>&3)
+	#done
+	CFG_SQLSERVER="MariaDB"
 
 	while [[ ! "$CFG_MYSQL_ROOT_PWD" =~ $RE ]]
 	do
@@ -38,6 +40,11 @@ AskQuestionsMultiserver(){
 	else
 		CFG_SETUP_MASTER=n
 	fi
+
+        while [[ ! "$CFG_ISPC" =~ $RE ]]
+        do
+                CFG_ISPC=$(whiptail --title "ISPConfig Setup" --backtitle "$WT_BACKTITLE" --nocancel --radiolist "Would you like full unattended setup of expert mode for ISPConfig?" 10 50 2 "standard" "(default)" ON "expert" "" OFF 3>&1 1>&2 2>&3)
+        done
 
 	if [ $CFG_SETUP_MASTER == "n" ]; then
 		while [[ ! "$CHECK_MASTER_CONNECTION" =~ $RE ]]
@@ -89,9 +96,15 @@ AskQuestionsMultiserver(){
 			fi
 		done
 	else
-		CFG_SETUP_WEB=yes
+		#CFG_SETUP_WEB=yes
 		MULTISERVER=n
+        	if (whiptail --title "Install server types" --backtitle "$WT_BACKTITLE" --yesno "Do you want to setup a Web server?" 10 50) then
+                	CFG_SETUP_WEB=yes
+        	else
+                	CFG_SETUP_WEB=no
+		fi
 	fi
+
 
 	if (whiptail --title "Install server types" --backtitle "$WT_BACKTITLE" --yesno "Do you want to setup a Mail server?" 10 50) then
 		CFG_SETUP_MAIL=yes
@@ -111,13 +124,29 @@ AskQuestionsMultiserver(){
 		CFG_SETUP_DB=n
 	fi
 
-	if [ $CFG_SETUP_WEB == "yes" ]; then
+	if [ $CFG_SETUP_WEB == "yes" ] || [ $CFG_SETUP_MASTER == "y" ]; then
 		while [[ ! "$CFG_WEBSERVER" =~ $RE ]]
 		do
 			CFG_WEBSERVER=$(whiptail --title "Web server" --backtitle "$WT_BACKTITLE" --nocancel --radiolist "Please select Web server type" 10 50 2 "Apache" "(default)" ON "nginx" "" OFF 3>&1 1>&2 2>&3)
 		done
 		CFG_WEBSERVER=${CFG_WEBSERVER,,}
 
+                while [[ ! "$CFG_PHPMYADMIN" =~ $RE ]]
+                do
+                        CFG_PHPMYADMIN=$(whiptail --title "Install phpMyAdmin" --backtitle "$WT_BACKTITLE" --nocancel --radiolist "Do you want to install phpMyAdmin?" 10 50 2 "yes" "(default)" ON "no" "" OFF 3>&1 1>&2 2>&3)
+                done
+
+                while [[ ! "$CFG_WEBMAIL" =~ $RE ]]
+                do
+			CFG_WEBMAIL=$(whiptail --title "Webmail client" --backtitle "$WT_BACKTITLE" --nocancel --radiolist "Please select your webmail client" 10 50 3 "Roundcube" "(default)" ON "SquirrelMail" "" OFF "no" "(Skip)" OFF 3>&1 1>&2 2>&3) 
+                done
+                CFG_WEBMAIL=${CFG_WEBMAIL,,}
+	else
+		CFG_WEBSERVER="no"
+		CFG_PHPMYADMIN="no"
+		CFG_WEBMAIL="no"
+	fi
+        if [ $CFG_SETUP_WEB == "yes" ]; then
 		if (whiptail --title "Quota" --backtitle "$WT_BACKTITLE" --yesno "Setup user quota?" 10 50) then
 			CFG_QUOTA=yes
 		else
@@ -129,27 +158,9 @@ AskQuestionsMultiserver(){
 		else
 			CFG_JKIT=no
 		fi
-
-		while [[ ! "$CFG_PHPMYADMIN" =~ $RE ]]
-		do
-			CFG_PHPMYADMIN=$(whiptail --title "Install phpMyAdmin" --backtitle "$WT_BACKTITLE" --nocancel --radiolist "Do you want to install phpMyAdmin?" 10 50 2 "yes" "(default)" ON "no" "" OFF 3>&1 1>&2 2>&3)
-		done
-
-		while [[ ! "$CFG_WEBMAIL" =~ $RE ]]
-		do
-			CFG_WEBMAIL=$(whiptail --title "Webmail client" --backtitle "$WT_BACKTITLE" --nocancel --radiolist "Please select your webmail client" 10 50 3 "Roundcube" "(default)" ON "SquirrelMail" "" OFF "no" "(Skip)" OFF 3>&1 1>&2 2>&3)
-		done
-		CFG_WEBMAIL=${CFG_WEBMAIL,,}
-
-		if [ "$CFG_WEBMAIL" == "roundcube" ]; then
-			roundcube_db=$(whiptail --title "RoundCube mail client" --backtitle "$WT_BACKTITLE" --inputbox "Please specify the roundcube database name" --nocancel 10 50 3>&1 1>&2 2>&3)
-			roundcube_user=$(whiptail --title "RoundCube mail client" --backtitle "$WT_BACKTITLE" --inputbox "Please specify the roundcube user" --nocancel 10 50 "$USER" 3>&1 1>&2 2>&3)
-			roundcube_pass=$(whiptail --title "RoundCube mail client" --backtitle "$WT_BACKTITLE" --passwordbox "Please specify the roundcube user password" --nocancel 10 50 3>&1 1>&2 2>&3)
-		else
-			CFG_WEBMAIL="no";
-		fi
 	else
-		CFG_WEBMAIL="no"
+		CFG_JKIT="no"
+		CFG_QUOTA="no"
 	fi
 
 	if [ $CFG_SETUP_MAIL == "yes" ]; then
@@ -161,7 +172,7 @@ AskQuestionsMultiserver(){
 
         	while [[ ! "$CFG_ANTISPAM" =~ $RE ]]
         	do
-                	CFG_ANTISPAM=$(whiptail --title "Spam detection" --backtitle "$WT_BACKTITLE" --nocancel --radiolist "Please select the spam detection software" 10 50 2 "rspamd" "(default)" ON "amavisd" "(Amavisd+SpamAssassin)" OFF 3>&1 $
+			CFG_ANTISPAM=$(whiptail --title "Spam detection" --backtitle "$WT_BACKTITLE" --nocancel --radiolist "Please select the spam detection software" 10 50 2 "rspamd" "(default)" ON "amavisd" "(Amavisd+SpamAssassin)" 3>&1 >&2 2>&3)
         	done
 
 		while [[ ! "$CFG_AVUPDATE" =~ $RE ]]
@@ -199,7 +210,7 @@ AskQuestionsMultiserver(){
 	fi
 
 
-	CFG_ISPC=expert
+#	CFG_ISPC=expert
 #	CFG_WEBMAIL=squirrelmail
 
 	while [[ ! "$SSL_COUNTRY" =~ $RE ]]

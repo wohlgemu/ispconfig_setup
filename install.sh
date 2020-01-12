@@ -271,19 +271,23 @@ if [ -f /etc/debian_version ]; then
 		source $APWD/distros/$DISTRO/askquestions_multiserver.sh
 		AskQuestionsMultiserver
 	fi
+
 	if [ "$DISTRO" == "debian10" ]; then
         	source ${APWD}/distros/${DISTRO}/install_mailman.sh
 	fi
 
 	InstallBasics 
-	InstallSQLServer 
-	if [ "$CFG_SETUP_WEB" == "yes" ] || [ "$CFG_MULTISERVER" == "no" ]; then
+	InstallSQLServer
+
+	if [ "$CFG_SETUP_WEB" == "yes" ] || [ "$CFG_SETUP_MASTER" == "no" ] || [ $CFG_SETUP_MASTER="y" ]; then
 		InstallWebServer
-		InstallFTP 
-		if [ "$CFG_QUOTA" == "yes" ]; then
+		if [ "$CFG_SETUP_WEB" == "yes" ]; then	
+			InstallFTP
+		fi
+		if [ "$CFG_SETUP_WEB" == "yes" ] && [ "$CFG_QUOTA" == "yes" ]; then
 			InstallQuota 
 		fi
-		if [ "$CFG_JKIT" == "yes" ]; then
+		if [ "$CFG_SETUP_WEB" == "yes" ] && [ "$CFG_JKIT" == "yes" ]; then
 			InstallJailkit 
 		fi
 		if [ "$CFG_HHVM" == "yes" ]; then

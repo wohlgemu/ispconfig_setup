@@ -15,7 +15,7 @@ InstallISPConfig() {
 	tar xfz ISPConfig-3-stable.tar.gz
 	cd ispconfig3_install/install/
   fi
-  if [ "$CFG_ISPC" == "standard" ]; then
+  #if [ "$CFG_ISPC" == "standard" ]; then
   	echo "Create INI file"
 	touch autoinstall.ini
 	echo "[install]" > autoinstall.ini
@@ -81,9 +81,9 @@ InstallISPConfig() {
 	echo "create_new_ispconfig_ssl_cert=no" >> autoinstall.ini
     echo "reconfigure_crontab=yes" >> autoinstall.ini
     echo | php -q install.php --autoinstall=autoinstall.ini
-  else
-    php -q install.php
-  fi
+#  else
+#    php -q install.php
+#  fi
   if [ $CFG_SETUP_WEB == "yes" ]; then
     if [ "$CFG_WEBSERVER" == "nginx" ]; then
         echo -n "Restarting nginx... "
