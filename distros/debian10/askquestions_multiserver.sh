@@ -153,22 +153,47 @@ AskQuestionsMultiserver(){
 	fi
 
 	if [ $CFG_SETUP_MAIL == "yes" ]; then
-		while [[ ! "$CFG_MTA" =~ $RE ]]
-		do
-			CFG_MTA=$(whiptail --title "Mail Server" --backtitle "$WT_BACKTITLE" --nocancel --radiolist "Please select Mail server type" 10 50 2 "Dovecot" "(default)" ON "Courier" "" OFF 3>&1 1>&2 2>&3)
-		done
-		CFG_MTA=${CFG_MTA,,}
+		#while [[ ! "$CFG_MTA" =~ $RE ]]
+		#do
+		#	CFG_MTA=$(whiptail --title "Mail Server" --backtitle "$WT_BACKTITLE" --nocancel --radiolist "Please select Mail server type" 10 50 2 "Dovecot" "(default)" ON "Courier" "" OFF 3>&1 1>&2 2>&3)
+		#done
+		#CFG_MTA=${CFG_MTA,,}
+
+        	while [[ ! "$CFG_ANTISPAM" =~ $RE ]]
+        	do
+                	CFG_ANTISPAM=$(whiptail --title "Spam detection" --backtitle "$WT_BACKTITLE" --nocancel --radiolist "Please select the spam detection software" 10 50 2 "rspamd" "(default)" ON "amavisd" "(Amavisd+SpamAssassin)" OFF 3>&1 $
+        	done
 
 		while [[ ! "$CFG_AVUPDATE" =~ $RE ]]
 		do
 			CFG_AVUPDATE=$(whiptail --title "Update Freshclam DB" --backtitle "$WT_BACKTITLE" --nocancel --radiolist "Do you want to update Antivirus Database?" 10 50 2 "yes" "(default)" ON "no" "" OFF 3>&1 1>&2 2>&3)
 		done
 
-		if (whiptail --title "DKIM" --backtitle "$WT_BACKTITLE" --yesno "Would you like to skip DomainKeys Identified Mail (DKIM) configuration for Amavis? (not recommended)" 10 50) then
-			CFG_DKIM=y
-		else
-			CFG_DKIM=n
-		fi
+		#if (whiptail --title "DKIM" --backtitle "$WT_BACKTITLE" --yesno "Would you like to skip DomainKeys Identified Mail (DKIM) configuration for Amavis? (not recommended)" 10 50) then
+		#	CFG_DKIM=y
+		#else
+		#	CFG_DKIM=n
+		#fi
+
+		if [[ ! "$CFG_MAILMAN" =~ $RE ]]; then
+                	if (whiptail --title "Mailman" --backtitle "$WT_BACKTITLE" --yesno "Would you like to install Mailman?" 10 50) then
+                        	CFG_MAILMAN=yes
+                        	while [[ ! "$MMSITEPASS" =~ $RE ]]
+                        	do
+                                	MMSITEPASS=$(whiptail --title "Mailman Site Password" --backtitle "$WT_BACKTITLE" --passwordbox "Please specify the Mailman site password" --nocancel 10 50 3>&1 1>&2 2>&3)
+                        	done
+                        	while [[ ! "$MMLISTOWNER" =~ $RE ]]
+                        	do
+                                	MMLISTOWNER=$(whiptail --title "Mailman Site List Owner" --backtitle "$WT_BACKTITLE" --inputbox "Please specify the Mailman site list owner" --nocancel 10 50 "$USER@${CFG_HOSTNAME_FQDN}" 3>&1 1>&2 2>&3)
+                        	done
+                        	while [[ ! "$MMLISTPASS" =~ $RE ]]
+                        	do
+                                	MMLISTPASS=$(whiptail --title "Mailman Site List Password" --backtitle "$WT_BACKTITLE" --passwordbox "Please specify the Mailman site list password" --nocancel 10 50 3>&1 1>&2 2>&3)
+                        	done
+                	else
+                        	CFG_MAILMAN=no
+                	fi
+        	fi
 	else
 		CFG_DKIM=y
 	fi

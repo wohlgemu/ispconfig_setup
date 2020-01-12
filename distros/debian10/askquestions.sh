@@ -62,7 +62,7 @@ AskQuestions() {
                         done
                         while [[ ! "$MMLISTOWNER" =~ $RE ]]
                         do
-                                MMLISTOWNER=$(whiptail --title "Mailman Site List Owner" --backtitle "$WT_BACKTITLE" --inputbox "Please specify the Mailman site list owner" --nocancel 10 50 "$USER" 3>&1 1>&2 2>&3)
+                                MMLISTOWNER=$(whiptail --title "Mailman Site List Owner" --backtitle "$WT_BACKTITLE" --inputbox "Please specify the Mailman site list owner" --nocancel 10 50 "${USER}@${CFG_HOSTNAME_FQDN}" 3>&1 1>&2 2>&3)
                         done
                         while [[ ! "$MMLISTPASS" =~ $RE ]]
                         do
