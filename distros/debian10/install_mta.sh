@@ -5,6 +5,6 @@
 InstallMTA() {
   CFG_MTA='dovecot'
   echo -n "Installing POP3/IMAP Mail server (Dovecot) and Mail signing (OpenDKIM, OpenDMARC)... ";
-  apt_install dovecot-imapd dovecot-pop3d dovecot-mysql dovecot-sieve dovecot-lmtpd sudo dovecot-managesieved dovecot-sieve dovecot-antispam opendkim opendkim-tools opendmarc
+  apt_install dovecot-imapd dovecot-pop3d dovecot-mysql dovecot-sieve dovecot-lmtpd sudo dovecot-managesieved dovecot-sieve dovecot-antispam opendkim opendkim-tools 
   echo -e "[${green}DONE${NC}]\n"
 }
