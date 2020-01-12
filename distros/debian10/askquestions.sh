@@ -22,7 +22,8 @@ AskQuestions() {
 		CFG_WEBSERVER=$(whiptail --title "Web server" --backtitle "$WT_BACKTITLE" --nocancel --radiolist "Please select Web server type" 10 50 2 "Apache" "(default)" ON "nginx" "" OFF 3>&1 1>&2 2>&3)
 	done
 	CFG_WEBSERVER=${CFG_WEBSERVER,,}
-		
+	
+	CFG_PHP56='no'
 	#while [[ ! "$CFG_PHP56" =~ $RE ]]
 	#do
 	#	CFG_PHP56=$(whiptail --title "Install PHP 5.6" --backtitle "$WT_BACKTITLE" --nocancel --radiolist "By default ISPConfig comes with PHP 7, do you want to install also PHP 5.6 version?" 10 50 2 "no" "(default)" ON "yes" "" OFF 3>&1 1>&2 2>&3)
@@ -41,6 +42,11 @@ AskQuestions() {
 	do
 		CFG_PHPMYADMIN=$(whiptail --title "Install phpMyAdmin" --backtitle "$WT_BACKTITLE" --nocancel --radiolist "Do you want to install phpMyAdmin?" 10 50 2 "yes" "(default)" ON "no" "" OFF 3>&1 1>&2 2>&3)
 	done
+
+        while [[ ! "$CFG_ANTISPAM" =~ $RE ]]
+        do
+		CFG_ANTISPAM=$(whiptail --title "Spam detection" --backtitle "$WT_BACKTITLE" --nocancel --radiolist "Please select the spam detection software" 10 50 2 "rspamd" "(default)" ON "amavisd" "(Amavisd+SpamAssassin)" OFF 3>&1 1>&2 2>&3)
+        done
 
 	while [[ ! "$CFG_AVUPDATE" =~ $RE ]]
 	do
