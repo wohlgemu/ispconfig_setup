@@ -14,7 +14,16 @@ InstallSQLServer() {
 	# Make our changes take effect
 	mysql -e "FLUSH PRIVILEGES"
 	echo -e "[${green}DONE${NC}]\n"
+	echo "mysql soft nofile 65535" >> /etc/security/limits.conf
+	echo "mysql hard nofile 65535" >> /etc/security/limits.conf
+
+	mkdir -p /etc/systemd/system/mysql.service.d/
+	cat <<EOF > /etc/systemd/system/mysql.service.d/limits.conf
+[Service]
+LimitNOFILE=infinity
+EOF
 	echo -n "Restarting MariaDB... "
+	systemctl daemon-reload
 	systemctl restart mysql
     echo -e "[${green}DONE${NC}]\n"
 }
