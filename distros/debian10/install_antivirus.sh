@@ -31,7 +31,7 @@ InstallAntiVirus() {
     echo "deb-src [arch=amd64] http://rspamd.com/apt-stable/ $CODENAME main" >> /etc/apt/sources.list.d/rspamd.list
     hide_output apt-get update
     apt_install rspamd clamav clamav-daemon unzip bzip2 arj nomarch lzop cabextract p7zip p7zip-full unrar lrzip \
-         apt-listchanges libnet-ldap-perl libauthen-sasl-perl clamav-docs daemon libio-string-perl libio-socket-ssl-perl libnet-ident-perl \
+         apt-listchanges libnet-ldap-perl libauthen-sasl-perl clamav-docs daemon libclamunrar9 libio-string-perl libio-socket-ssl-perl libnet-ident-perl \
          zip libnet-dns-perl libdbd-mysql-perl unrar-free unp lz4 liblz4-tool unp
     echo 'servers = "127.0.0.1";' > /etc/rspamd/local.d/redis.conf
     echo "nrows = 2500;" > /etc/rspamd/local.d/history_redis.conf

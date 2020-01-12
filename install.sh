@@ -250,6 +250,10 @@ if [ "$DISTRO" == "debian8" ]; then
 	done
 fi
 
+if [ "$DISTRO" == "debian10" ]; then
+	source ${APWD}/distros/${DISTRO}/install_mailman.sh
+fi
+
 if [ "$DISTRO" == "debian8" ] || [ "$DISTRO" == "debian9" ] || [ "$DISTRO" == "debian10" ]; then
 	while [[ ! "$CFG_MULTISERVER" =~ $RE ]]
 	do
@@ -267,6 +271,10 @@ if [ -f /etc/debian_version ]; then
 		source $APWD/distros/$DISTRO/askquestions_multiserver.sh
 		AskQuestionsMultiserver
 	fi
+	if [ "$DISTRO" == "debian10" ]; then
+        	source ${APWD}/distros/${DISTRO}/install_mailman.sh
+	fi
+
 	InstallBasics 
 	InstallSQLServer 
 	if [ "$CFG_SETUP_WEB" == "yes" ] || [ "$CFG_MULTISERVER" == "no" ]; then
@@ -290,15 +298,20 @@ if [ -f /etc/debian_version ]; then
 		fi
 	else
 		InstallBasePhp    #to remove in feature release
-	fi	
+	fi
+        if [ "$CFG_SETUP_NS" == "yes" ] || [ "$CFG_MULTISERVER" == "no" ]; then
+                InstallBind
+        fi
+
 	if [ "$CFG_SETUP_MAIL" == "yes" ] || [ "$CFG_MULTISERVER" == "no" ]; then
 		InstallPostfix 
 		InstallMTA 
 		InstallAntiVirus 
-	fi	
-	if [ "$CFG_SETUP_NS" == "yes" ] || [ "$CFG_MULTISERVER" == "no" ]; then
-		InstallBind 
+		if [ "$CFG_MAILMAN" == "yes" ]; then
+                	InstallMailman
+        	fi
 	fi
+
 	InstallWebStats
 	InstallFail2ban
 	if [ "$CFG_ISPCVERSION" == "Beta" ]; then

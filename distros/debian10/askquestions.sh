@@ -53,6 +53,26 @@ AskQuestions() {
 		CFG_AVUPDATE=$(whiptail --title "Update Freshclam DB" --backtitle "$WT_BACKTITLE" --nocancel --radiolist "Do you want to update Antivirus Database?" 10 50 2 "yes" "(default)" ON "no" "" OFF 3>&1 1>&2 2>&3)
 	done
 
+	if [[ ! "$CFG_MAILMAN" =~ $RE ]]; then
+                if (whiptail --title "Mailman" --backtitle "$WT_BACKTITLE" --yesno "Would you like to install Mailman?" 10 50) then
+                        CFG_MAILMAN=yes
+                        while [[ ! "$MMSITEPASS" =~ $RE ]]
+                        do
+                                MMSITEPASS=$(whiptail --title "Mailman Site Password" --backtitle "$WT_BACKTITLE" --passwordbox "Please specify the Mailman site password" --nocancel 10 50 3>&1 1>&2 2>&3)
+                        done
+                        while [[ ! "$MMLISTOWNER" =~ $RE ]]
+                        do
+                                MMLISTOWNER=$(whiptail --title "Mailman Site List Owner" --backtitle "$WT_BACKTITLE" --inputbox "Please specify the Mailman site list owner" --nocancel 10 50 "$USER" 3>&1 1>&2 2>&3)
+                        done
+                        while [[ ! "$MMLISTPASS" =~ $RE ]]
+                        do
+                                MMLISTPASS=$(whiptail --title "Mailman Site List Password" --backtitle "$WT_BACKTITLE" --passwordbox "Please specify the Mailman site list password" --nocancel 10 50 3>&1 1>&2 2>&3)
+                        done
+                else
+                        CFG_MAILMAN=no
+                fi
+	fi
+
 	while [[ ! "$CFG_QUOTA" =~ $RE ]]
 	do
 		CFG_QUOTA=$(whiptail --title "Quota" --backtitle "$WT_BACKTITLE" --nocancel --radiolist "Setup user quota?" 10 50 2 "yes" "(default)" ON "no" "" OFF 3>&1 1>&2 2>&3)
