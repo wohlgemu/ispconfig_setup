@@ -4,7 +4,7 @@
 #---------------------------------------------------------------------
 
 #Program Versions
-JKV="2.20"  #Jailkit Version -> Maybe this can be automated
+JKV="2.21"  #Jailkit Version -> Maybe this can be automated
 SUM="b6d1653d915b9c9a190e185981f236e6"
 
 InstallJailkit() {
