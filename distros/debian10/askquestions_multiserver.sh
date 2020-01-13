@@ -40,11 +40,7 @@ AskQuestionsMultiserver(){
 	else
 		CFG_SETUP_MASTER=n
 	fi
-
-        while [[ ! "$CFG_ISPC" =~ $RE ]]
-        do
-                CFG_ISPC=$(whiptail --title "ISPConfig Setup" --backtitle "$WT_BACKTITLE" --nocancel --radiolist "Would you like full unattended setup of expert mode for ISPConfig?" 10 50 2 "standard" "(default)" ON "expert" "" OFF 3>&1 1>&2 2>&3)
-        done
+	CFG_ISPC='expert'
 
 	if [ $CFG_SETUP_MASTER == "n" ]; then
 		while [[ ! "$CHECK_MASTER_CONNECTION" =~ $RE ]]
@@ -172,7 +168,7 @@ AskQuestionsMultiserver(){
 
         	while [[ ! "$CFG_ANTISPAM" =~ $RE ]]
         	do
-			CFG_ANTISPAM=$(whiptail --title "Spam detection" --backtitle "$WT_BACKTITLE" --nocancel --radiolist "Please select the spam detection software" 10 50 2 "rspamd" "(default)" ON "amavisd" "(Amavisd+SpamAssassin)" 3>&1 >&2 2>&3)
+			CFG_ANTISPAM=$(whiptail --title "Spam detection" --backtitle "$WT_BACKTITLE" --nocancel --radiolist "Please select the spam detection software" 10 50 2 "rspamd" "(default)" ON "amavisd" "(Amavisd+SpamAssassin)" OFF 3>&1 1>&2 2>&3)
         	done
 
 		while [[ ! "$CFG_AVUPDATE" =~ $RE ]]

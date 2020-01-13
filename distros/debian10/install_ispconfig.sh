@@ -52,6 +52,7 @@ InstallISPConfig() {
 	echo "mysql_ispconfig_password=afStEratXBsgatRtsa42CadwhQ" >> autoinstall.ini
 	echo "join_multiserver_setup=$MULTISERVER" >> autoinstall.ini
     echo "mysql_master_hostname=$CFG_MASTER_FQDN" >> autoinstall.ini
+        echo "mysql_master_port=3306" >> autoinstall.ini
 	echo "mysql_master_root_user=root" >> autoinstall.ini
 	echo "mysql_master_root_password=$CFG_MASTER_MYSQL_ROOT_PWD" >> autoinstall.ini
 	echo "mysql_master_database=dbispconfig" >> autoinstall.ini
@@ -73,6 +74,7 @@ InstallISPConfig() {
 	echo "mysql_root_password=$CFG_MYSQL_ROOT_PWD" >> autoinstall.ini
     echo "mysql_master_hostname=$CFG_MASTER_FQDN" >> autoinstall.ini
 	echo "mysql_master_root_user=root" >> autoinstall.ini
+	echo "mysql_master_port=3306" >> autoinstall.ini
     echo "mysql_master_root_password=$CFG_MASTER_MYSQL_ROOT_PWD" >> autoinstall.ini
 	echo "mysql_master_database=dbispconfig" >> autoinstall.ini
 	echo "reconfigure_permissions_in_master_database=no" >> autoinstall.ini
