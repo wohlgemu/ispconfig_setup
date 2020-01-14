@@ -1,0 +1,33 @@
+--- /usr/local/ispconfig/server/plugins-available/mysql_clientdb_plugin.inc.php	2020-01-14 01:12:26.336943120 +0100
++++ /usr/local/ispconfig/server/plugins-available/mysql_clientdb_plugin.inc.php-patched	2020-01-14 01:12:45.773536655 +0100
+@@ -72,7 +72,7 @@
+ 	}
+ 
+ 	function process_host_list($action, $database_name, $database_user, $database_password, $host_list, $link, $database_rename_user = '', $user_access_mode = 'rw') {
+-		global $app;
++		global $app, $conf;
+ 
+ 		// check mysql-plugins
+ 		$unwanted_sql_plugins = array('validate_password'); // strict-password-validation
+@@ -99,6 +99,10 @@
+ 		// process arrays and comma separated strings
+ 		if(!is_array($host_list)) $host_list = explode(',', $host_list);
+ 
++		if($conf['dbmaster_host'] != '' && !in_array('%', $host_list) && !in_array($conf['dbmaster_host'], $host_list)) {
++			#$host_list[] = $conf['dbmaster_host'];
++			$host_list[] = gethostbyname($conf['dbmaster_host']);
++		}	
+ 		$success = true;
+ 		if(!preg_match('/\*[A-F0-9]{40}$/', $database_password)) {
+ 				$result = $link->query("SELECT PASSWORD('" . $link->escape_string($database_password) . "') as `crypted`");
+@@ -686,6 +690,10 @@
+ 
+ 
+ 		$host_list = array('localhost');
++                if($conf['dbmaster_host'] != '' && !in_array('%', $host_list) && !in_array($conf['dbmaster_host'], $host_list)) {
++                        #$host_list[] = $conf['dbmaster_host'];
++                        $host_list[] = gethostbyname($conf['dbmaster_host']);
++                }
+ 		// get all databases this user was active for
+ 		$user_id = intval($data['old']['database_user_id']);
+ 		$db_list = $app->db->queryAllRecords("SELECT `remote_access`, `remote_ips` FROM `web_database` WHERE `database_user_id` = ? OR database_ro_user_id = ?", $user_id, $user_id);;
