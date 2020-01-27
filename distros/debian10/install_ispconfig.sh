@@ -56,32 +56,32 @@ InstallISPConfig() {
 	echo "mysql_master_root_user=root" >> autoinstall.ini
 	echo "mysql_master_root_password=$CFG_MASTER_MYSQL_ROOT_PWD" >> autoinstall.ini
 	echo "mysql_master_database=dbispconfig" >> autoinstall.ini
-	echo "configure_mail=$CFG_SETUP_MAIL" >> autoinstall.ini
+	echo "configure_mail=${CFG_SETUP_MAI:0:1}" >> autoinstall.ini
 	if [ $CFG_SETUP_WEB == "yes" ]; then
-      echo "configure_jailkit=$CFG_JKIT" >> autoinstall.ini
+      echo "configure_jailkit=y" >> autoinstall.ini
     else
       echo "configure_jailkit=n" >> autoinstall.ini
     fi
-    echo "configure_ftp=$CFG_SETUP_WEB" >> autoinstall.ini
-	echo "configure_dns=$CFG_SETUP_NS" >> autoinstall.ini
-    echo "configure_apache=$CFG_APACHE" >> autoinstall.ini
-	echo "configure_nginx=$CFG_NGINX" >> autoinstall.ini
+    echo "configure_ftp=${CFG_SETUP_WEB:0:1}" >> autoinstall.ini
+	echo "configure_dns=${CFG_SETUP_NS:0:1}" >> autoinstall.ini
+    echo "configure_apache=${CFG_APACHE:0:1}" >> autoinstall.ini
+	echo "configure_nginx=${CFG_NGINX:0:1}" >> autoinstall.ini
 	echo "configure_firewall=y" >> autoinstall.ini
 	echo "install_ispconfig_web_interface=$CFG_SETUP_MASTER" >> autoinstall.ini
 	echo
 	echo "[update]" >> autoinstall.ini
-	echo "do_backup=yes" >> autoinstall.ini
+	echo "do_backup=y" >> autoinstall.ini
 	echo "mysql_root_password=$CFG_MYSQL_ROOT_PWD" >> autoinstall.ini
     echo "mysql_master_hostname=$CFG_MASTER_FQDN" >> autoinstall.ini
 	echo "mysql_master_root_user=root" >> autoinstall.ini
 	echo "mysql_master_port=3306" >> autoinstall.ini
     echo "mysql_master_root_password=$CFG_MASTER_MYSQL_ROOT_PWD" >> autoinstall.ini
 	echo "mysql_master_database=dbispconfig" >> autoinstall.ini
-	echo "reconfigure_permissions_in_master_database=no" >> autoinstall.ini
-	echo "reconfigure_services=yes" >> autoinstall.ini
+	echo "reconfigure_permissions_in_master_database=n" >> autoinstall.ini
+	echo "reconfigure_services=y" >> autoinstall.ini
     echo "ispconfig_port=8080" >> autoinstall.ini
-	echo "create_new_ispconfig_ssl_cert=no" >> autoinstall.ini
-    echo "reconfigure_crontab=yes" >> autoinstall.ini
+	echo "create_new_ispconfig_ssl_cert=y" >> autoinstall.ini
+    echo "reconfigure_crontab=y" >> autoinstall.ini
     echo | php -q install.php --autoinstall=autoinstall.ini
 #  else
 #    php -q install.php
